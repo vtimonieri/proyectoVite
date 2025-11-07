@@ -7,7 +7,10 @@ import Carrito from './pages/Carrito'
 function App() {
   return (
     <>
+      {/* Barra de navegación */}
       <Navbar />
+
+      {/* Rutas de la aplicación */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Productos />} />
@@ -18,3 +21,4 @@ function App() {
 }
 
 export default App
+
