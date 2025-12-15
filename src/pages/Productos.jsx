@@ -1,24 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { FaSearch, FaShoppingCart } from "react-icons/fa";
-
-const ProductCard = styled.div`
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  height: 100%;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
+import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
+import { FaShoppingCart } from "react-icons/fa";
 
 export default function Productos() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+
   const navigate = useNavigate();
+  const { cart, addToCart } = useCart();
 
   const API_URL = "https://693b1aa09b80ba7262cc70dc.mockapi.io/Productos";
 
@@ -38,36 +29,20 @@ export default function Productos() {
     cargarProductos();
   }, []);
 
+  // 👉 SOLO para verificar que el carrito se actualiza
+  console.log("🛒 Carrito actual:", cart);
+
   if (loading) {
     return <p className="p-4">Cargando productos...</p>;
   }
-
-  const productosFiltrados = productos.filter((p) =>
-    p.nombre.toLowerCase().includes(search.toLowerCase())
-  );
 
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Productos disponibles</h2>
 
-      {/* 🔍 Barra de búsqueda */}
-      <div className="input-group mb-4">
-        <span className="input-group-text">
-          <FaSearch />
-        </span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Buscar productos..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      {/* Si no hay productos */}
-      {productosFiltrados.length === 0 && (
-        <div className="mt-4">
-          <p>No hay productos que coincidan.</p>
+      {productos.length === 0 && (
+        <div>
+          <p>No hay productos cargados.</p>
           <button
             className="btn btn-secondary"
             onClick={() => navigate("/dashboard")}
@@ -77,20 +52,26 @@ export default function Productos() {
         </div>
       )}
 
-      {/* 🧱 Grilla responsive */}
       <div className="row">
-        {productosFiltrados.map((p) => (
-          <div key={p.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-            <ProductCard>
-              <div>
-                <h5>{p.nombre}</h5>
-                <p className="fw-bold">${p.precio}</p>
-              </div>
+        {productos.map((p) => (
+          <div key={p.id} className="col-12 col-sm-6 col-md-4 mb-4">
+            <div className="card h-100 shadow-sm">
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title">{p.nombre}</h5>
+                <p className="card-text">${p.precio}</p>
 
-              <button className="btn btn-primary mt-2">
-                <FaShoppingCart /> Agregar
-              </button>
-            </ProductCard>
+                <button
+                  className="btn btn-primary mt-auto"
+                  onClick={() => {
+                    addToCart(p);
+                    toast.success("Producto agregado al carrito");
+                  }}
+                >
+                  <FaShoppingCart className="me-2" />
+                  Agregar al carrito
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>

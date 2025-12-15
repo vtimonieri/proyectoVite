@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useProducts } from "../context/ProductsContext";
 
 export default function AddProduct() {
+  const { addProduct } = useProducts(); // 👈 Context
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     nombre: "",
     precio: "",
@@ -10,8 +14,6 @@ export default function AddProduct() {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  const navigate = useNavigate();
 
   const API_URL = "https://693b1aa09b80ba7262cc70dc.mockapi.io/Productos";
 
@@ -25,6 +27,7 @@ export default function AddProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validaciones
     if (!form.nombre || !form.precio || !form.descripcion) {
       setError("Todos los campos son obligatorios");
       return;
@@ -52,6 +55,12 @@ export default function AddProduct() {
 
       if (!res.ok) throw new Error("Error en la API");
 
+      // 👇 producto real con ID de la API
+      const savedProduct = await res.json();
+
+      // 👇 se guarda en el Context
+      addProduct(savedProduct);
+
       setSuccess("Producto agregado correctamente!");
       setForm({ nombre: "", precio: "", descripcion: "" });
 
@@ -59,8 +68,8 @@ export default function AddProduct() {
         navigate("/productos");
       }, 1000);
 
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       setError("Hubo un problema al guardar el producto.");
     }
   };

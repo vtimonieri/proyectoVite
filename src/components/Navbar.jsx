@@ -46,8 +46,8 @@ export default function Navbar() {
               <Link to="/carrito" style={{ color: "white", textDecoration: "none" }}>Carrito</Link>
               <Link to="/dashboard" style={{ color: "white", textDecoration: "none" }}>Dashboard</Link>
 
-              {/* NUEVO → Agregar producto */}
-              <Link to="/add-product" style={{ color: "white", textDecoration: "none" }}>
+            {/* NUEVO → Agregar producto */}
+          <Link to="/add-product" style={{ color: "white", textDecoration: "none" }}>
                 Agregar Producto
               </Link>
 

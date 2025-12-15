@@ -15,16 +15,35 @@ export default function Dashboard() {
 
       <p>Este es tu panel privado.</p>
 
-      <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
+      <div
+        style={{
+          marginTop: "2rem",
+          display: "flex",
+          gap: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
+        {/* ➕ Agregar producto */}
         <Link to="/add-product">
           <button>Agregar Producto</button>
         </Link>
 
+        {/* ❌ Eliminar producto */}
+        <Link to="/delete-product">
+          <button style={{ backgroundColor: "orange" }}>
+            Eliminar Producto
+          </button>
+        </Link>
+
+        {/* 👀 Ver productos */}
         <Link to="/productos">
           <button>Ver Productos</button>
         </Link>
 
+        {/* 🚪 Logout */}
+            <Link to="/login"></Link>
         <button
+    
           onClick={handleLogout}
           style={{ backgroundColor: "red", color: "white" }}
         >
@@ -34,4 +53,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

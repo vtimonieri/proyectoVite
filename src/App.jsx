@@ -1,44 +1,62 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProductsProvider } from "./context/ProductsContext";
+import { CartProvider } from "./context/CartContext";
+
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import Home from "./pages/Home";
 import Productos from "./pages/Productos";
 import Carrito from "./pages/Carrito";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
 import AddProduct from "./pages/AddProduct";
+import DeleteProduct from "./pages/DeleteProduct";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <ProductsProvider>
+        <CartProvider>
+          <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/productos" element={<Productos />} />
-        <Route path="/carrito" element={<Carrito />} />
-        <Route path="/login" element={<Login />} />
+          <Routes>
+            {/* Públicas */}
+            <Route path="/" element={<Home />} />
+            <Route path="/productos" element={<Productos />} />
+            <Route path="/carrito" element={<Carrito />} />
+            <Route path="/login" element={<Login />} />
 
-        {/* Dashboard protegido */}
-        <Route 
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+            {/* Protegidas */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
 
-        {/* Agregar producto protegido */}
-        <Route 
-          path="/add-product"
-          element={
-            <ProtectedRoute>
-              <AddProduct />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+            <Route
+              path="/add-product"
+              element={
+                <ProtectedRoute>
+                  <AddProduct />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/delete-product"
+              element={
+                <ProtectedRoute>
+                  <DeleteProduct />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </CartProvider>
+      </ProductsProvider>
     </BrowserRouter>
   );
 }
