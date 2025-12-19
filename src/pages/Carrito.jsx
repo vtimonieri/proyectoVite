@@ -1,57 +1,51 @@
 import { useCart } from "../context/CartContext";
-import { FaTrash } from "react-icons/fa";
 
 export default function Carrito() {
-  const { cart, removeFromCart, clearCart, total } = useCart();
+  const { cart, clearCart } = useCart();
+
+  const total = cart.reduce(
+    (acc, p) => acc + p.precio * p.cantidad,
+    0
+  );
+
+  console.log("CARRITO ACTUAL:", cart);
 
   return (
     <div className="container mt-4">
-      <h2>Carrito de compras</h2>
+      <h2>Carrito</h2>
 
       {cart.length === 0 ? (
         <p className="mt-3">El carrito está vacío</p>
       ) : (
         <>
           <ul className="list-group mt-3">
-            {cart.map((p) => (
+            {cart.map((p, index) => (
               <li
-                key={p.id}
+                key={index}
                 className="list-group-item d-flex justify-content-between align-items-center"
               >
                 <div>
                   <strong>{p.nombre}</strong>
-                  <div className="text-muted">
-                    Cantidad: {p.quantity}
-                  </div>
+                  <div>Cantidad: {p.cantidad}</div>
                 </div>
 
-                <div className="d-flex align-items-center gap-3">
-                  <span>
-                    ${p.precio * p.quantity}
-                  </span>
-
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={() => removeFromCart(p.id)}
-                    aria-label="Eliminar producto del carrito"
-                  >
-                    <FaTrash />
-                  </button>
+                <div>
+                  <div>${p.precio}</div>
+                  <strong>${p.precio * p.cantidad}</strong>
                 </div>
               </li>
             ))}
           </ul>
 
-          <div className="mt-4 d-flex justify-content-between align-items-center">
-            <h4>Total: ${total}</h4>
+          <h4 className="mt-3">Total: ${total}</h4>
 
-            <button
-              className="btn btn-outline-danger"
-              onClick={clearCart}
-            >
-              Vaciar carrito
-            </button>
-          </div>
+          {/* ✅ BOTÓN VACÍAR CARRITO */}
+          <button
+            className="btn btn-danger mt-3"
+            onClick={clearCart}
+          >
+            Vaciar carrito
+          </button>
         </>
       )}
     </div>

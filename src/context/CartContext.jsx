@@ -6,7 +6,13 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
 
   const addToCart = (product) => {
-    setCart((prev) => [...prev, product]);
+    const productWithQuantity = {
+      ...product,
+      precio: Number(product.precio), // asegura número
+      cantidad: 1,                     // 🔥 clave
+    };
+
+    setCart((prev) => [...prev, productWithQuantity]);
   };
 
   const removeFromCart = (id) => {
@@ -26,8 +32,4 @@ export function CartProvider({ children }) {
   );
 }
 
-
-export const useCart = () => {
-  return useContext(CartContext);
-};
-
+export const useCart = () => useContext(CartContext);
